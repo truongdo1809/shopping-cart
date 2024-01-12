@@ -1,5 +1,5 @@
 import { Cart, CartAction } from "./Cart.types";
-
+import { Products } from "./Product";
 
 export const cartReducer = (state: Cart, action: CartAction): Cart => {
   switch (action.type) {
@@ -32,7 +32,14 @@ export const cartReducer = (state: Cart, action: CartAction): Cart => {
         ),
       };
     }
-
+    case "update price": {
+      return {
+        items: state.items.map((item) => ({
+          ...item,
+          totalprice: item.quantity * item.product.price,
+        })),
+      };
+    }
     case "delete item": {
       return {
         items: state.items.filter((item) => item.id !== action.payload.id),
@@ -42,7 +49,6 @@ export const cartReducer = (state: Cart, action: CartAction): Cart => {
     case "clear cart": {
       return { items: [] };
     }
-
     default: {
       throw new Error(`Invalid action type ${action}`);
     }
